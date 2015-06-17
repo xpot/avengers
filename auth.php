@@ -1,6 +1,15 @@
 <?php
 //echo "wdfwredfwr";
 
+
+function String2Hex($string){
+    $hex='';
+    for ($i=0; $i < strlen($string); $i++){
+        $hex .= dechex(ord($string[$i]));
+    }
+    return $hex;
+}
+ 
 function authorize(){
 $dataToSign;
 $HTTP_verb="GET";
@@ -13,10 +22,13 @@ $Signature;
 $ASCII_encoded;
 $clientID="20";
 $secretAccessKEY="007";
+$FinalString;
 
 
-if($HTTP_verb == "GET")
+if($HTTP_verb == "GET"){
 	$Content_MD5="";
+	$FinalString="";
+	}
 
 else{
 	ksort($_POST);
@@ -24,18 +36,17 @@ else{
 	foreach($_POST as $key => $value)
 		$value=str_replace(" ", "%20", $value);
 
-	$FinalString;
+	//$FinalString;
 	foreach($_POST as $key => $value)
 		$FinalString=$key."=".$value."&";
 
-
-	$md5Hash=md5($FinalString);
-	$HexCode=String2Hex($FinalString);
-	$Content_MD5=strtolower($HexCode);
-
 	}
+$md5Hash=md5($FinalString);
+$HexCode=String2Hex($FinalString);
+echo "Hex code ----> " .$HexCode ."<br>";
+$Content_MD5=strtolower($HexCode);
 
-
+	
 $dataToSign=$HTTP_verb . "\n" . $Content_MD5 . "\n" . $Content_Type . "\n" . $TimeStamp . "\n" . $ResourceURI;
 $ASCII_encoded = mb_convert_encoding($dataToSign,"ASCII");
 //echo "ASCII_encoded  ----> " .$ASCII_encoded."<br>";
